@@ -36,14 +36,69 @@ Kanban Board의 현재 상태뿐만 아니라 업무 진행 과정도
 
 ## Conceptual ERD
 
-![Conceptual ERD](./docs/conceptual-erd.png)
+```mermaid
+flowchart TB
+
+    P[BOARD_PROJECTS]
+    M[BOARD_MEMBERS]
+    C[BOARD_COLUMNS]
+    MS[BOARD_MILESTONES]
+    I[BOARD_ISSUES]
+    CL[BOARD_CHECKLIST_ITEMS]
+
+    P ---|PROJECT-MEMBER<br/>N:M| M
+    P -->|defines<br/>1:N| C
+    P -->|has<br/>1:N| MS
+    P -->|contains<br/>1:N| I
+
+    MS -->|groups<br/>1:N| I
+    C -->|COLUMN-ISSUE<br/>1:N| I
+    M -->|MEMBER-ISSUE<br/>N:M| I
+
+    I -->|has<br/>1:N| CL
+```
+
+> 1:N = 일대다, N:M = 다대다  
+> 속성 및 PK/FK는 생략하고 핵심 관계만 표현한 개념적 모델입니다.
 
 프로젝트를 중심으로 팀원, Kanban 컬럼, 마일스톤 및 이슈가
 연결되며, 각 이슈에는 담당자와 체크리스트를 연결할 수 있습니다.
 
 ## Detailed ERD
 
-![Detailed ERD](./docs/erd.png)
+```mermaid
+flowchart TB
+
+    P[BOARD_PROJECTS]
+    M[BOARD_MEMBERS]
+    C[BOARD_COLUMNS]
+    MS[BOARD_MILESTONES]
+    PM[BOARD_PROJECT_MEMBERS]
+    I[BOARD_ISSUES]
+    PI[BOARD_PROJECT_ITEMS]
+    MV[BOARD_COLUMN_MOVEMENTS]
+    CL[BOARD_CHECKLIST_ITEMS]
+    IA[BOARD_ISSUE_ASSIGNEES]
+
+    P -->|컬럼 정의| C
+    P -->|마일스톤 보유| MS
+    P -->|이슈 포함| I
+
+    P -->|프로젝트 연결| PM
+    M -->|팀원 연결| PM
+
+    MS -->|이슈 그룹화| I
+
+    C -->|현재 위치 관리| PI
+    I -->|보드에 배치| PI
+
+    I -->|이동 이력 기록| MV
+
+    I -->|체크리스트 보유| CL
+
+    I -->|담당자 연결| IA
+    M -->|담당자로 참여| IA
+```
 
 실제 Supabase에서는 N:M 관계와 이슈의 현재 위치 및
 이동 이력을 별도의 테이블로 분리하여 관리합니다.
