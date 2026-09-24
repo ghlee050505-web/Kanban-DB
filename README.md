@@ -145,5 +145,4 @@ Issue 내부의 세부 작업은 `board_checklist_items`에 저장되며,
 
 ## 참고 자료
 
-- [GitHub Repository](https://github.com/ghlee050505-web/Kanban-DB)
 - [Supabase Dashboard](https://supabase.com/dashboard/project/nkbflxzsybuyicvwqiif)
